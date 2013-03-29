@@ -38,7 +38,7 @@ elgg_dump('selected container : ' . $selected_container->name);
     foreach ($content as $container) {
         $groups[$container->guid] = elgg_echo('group') . ': ' . $container->get('name');
     }
-  
+   if (!empty($groups)){
     //sort array while keeping the IDs
     asort($groups);
     $container = array(elgg_get_logged_in_user_guid() => elgg_echo('profile') . ': ' .  elgg_get_logged_in_user_entity()->name);
@@ -69,3 +69,10 @@ elgg_dump('selected container : ' . $selected_container->name);
 	?>
 	<input type="hidden" name="container_marker" value="on" /> 
 </div>
+
+
+    <?php
+
+} else {
+    echo '<input type="hidden" name="universal_category_marker" value="on" />';
+}
