@@ -39,7 +39,7 @@ if (empty($selected_container))
 	?>
 
 <div class="elgg-containers">
-	<label><?php echo elgg_echo('container'); ?></label>
+	<label><?php echo elgg_echo('container'); ?></label><br/>
 	<?php
     echo $container_selector;
 	?>
