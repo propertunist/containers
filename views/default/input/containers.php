@@ -10,9 +10,10 @@ $logged_in_user = elgg_get_logged_in_user_entity();
 if (isset($vars['entity']) && $vars['entity'] instanceof ElggEntity) {
 	$selected_container = $vars['entity']->getContainerEntity();
 }
+
 if (empty($selected_container))
 {
-    $selected_container = elgg_get_page_owner_guid();
+    $selected_container = elgg_get_page_owner_entity();
 }
 
  $content = elgg_get_entities_from_relationship(array(
