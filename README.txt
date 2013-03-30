@@ -8,6 +8,7 @@ available containers are the user profile of the current user and the groups to 
 
 == 1. Features ==
 adds container field to edit pages
+adds output label to show which group the entity is contained by
 
 == 2. ToDo ==
 fix error with bookmarks module
