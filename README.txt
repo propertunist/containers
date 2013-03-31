@@ -11,4 +11,3 @@ adds container field to edit pages
 adds output label to show which group the entity is contained by
 
 == 2. ToDo ==
-fix error with bookmarks module
