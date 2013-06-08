@@ -32,7 +32,7 @@ foreach ($variables as $name => $type) {
 <?php
 }
 
-$cats = elgg_view('categories', $vars);
+$cats = elgg_view('input/categories', $vars);
 if (!empty($cats)) {
 	echo $cats;
 }

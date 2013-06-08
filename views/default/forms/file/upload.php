@@ -10,10 +10,7 @@ $title = elgg_extract('title', $vars, '');
 $desc = elgg_extract('description', $vars, '');
 $tags = elgg_extract('tags', $vars, '');
 $access_id = elgg_extract('access_id', $vars, ACCESS_DEFAULT);
-$container_guid = elgg_extract('container_guid', $vars);
-if (!$container_guid) {
-	$container_guid = elgg_get_logged_in_user_guid();
-}
+
 $guid = elgg_extract('guid', $vars, null);
 
 if ($guid) {
@@ -42,7 +39,26 @@ if ($guid) {
 	<?php echo elgg_view('input/tags', array('name' => 'tags', 'value' => $tags)); ?>
 </div>
 <?php
-
+if(elgg_is_active_plugin('file_tools'))
+{
+    if (file_tools_use_folder_structure()){
+        $parent_guid = 0;
+        if($file = elgg_extract("entity", $vars)){
+            if($folders = $file->getEntitiesFromRelationship(FILE_TOOLS_RELATIONSHIP, true, 1)){
+                $parent_guid = $folders[0]->getGUID();
+            }
+        }
+        ?>
+        <div>
+            <label><?php echo elgg_echo("file_tools:forms:edit:parent"); ?><br />
+            <?php
+                echo elgg_view("input/folder_select", array("name" => "folder_guid", "value" => $parent_guid));     
+            ?>
+            </label>
+        </div>
+    <?php 
+    }
+}
 $categories = elgg_view('input/categories', $vars);
 if ($categories) {
 	echo $categories;
