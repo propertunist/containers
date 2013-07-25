@@ -32,7 +32,26 @@ $shares = elgg_extract('shares', $vars, array());
 	<?php echo elgg_view('input/tags', array('name' => 'tags', 'value' => $tags)); ?>
 </div>
 <?php
-
+if(elgg_is_active_plugin('bookmark_tools'))
+{
+	if(bookmark_tools_use_folder_structure()){
+		$parent_guid = 0;
+		if($bookmark = elgg_extract("entity", $vars)){
+			if($folders = $bookmark->getEntitiesFromRelationship(BOOKMARK_TOOLS_RELATIONSHIP, true, 1)){
+				$parent_guid = $folders[0]->getGUID();
+			}
+		}
+		?>
+		<div>
+			<label><?php echo elgg_echo("bookmark_tools:forms:edit:parent"); ?><br />
+			<?php
+				echo elgg_view("input/bmfolder_select", array("name" => "bmfolder_guid", "value" => $parent_guid));		
+			?>
+			</label>
+		</div>
+	<?php 
+	}
+}
 $categories = elgg_view('input/categories', $vars);
 if ($categories) {
 	echo $categories;
