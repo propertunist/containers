@@ -6,11 +6,12 @@
  */
 
 $blog = get_entity($vars['guid']);
+
 $vars['entity'] = $blog;
 
 $draft_warning = $vars['draft_warning'];
 if ($draft_warning) {
-	$draft_warning = '<span class="message warning">' . $draft_warning . '</span>';
+	$draft_warning = '<span class="mbm elgg-text-help">' . $draft_warning . '</span>';
 }
 
 $action_buttons = '';
@@ -20,10 +21,11 @@ $preview_button = '';
 if ($vars['guid']) {
 	// add a delete button if editing
 	$delete_url = "action/blog/delete?guid={$vars['guid']}";
-	$delete_link = elgg_view('output/confirmlink', array(
+	$delete_link = elgg_view('output/url', array(
 		'href' => $delete_url,
 		'text' => elgg_echo('delete'),
-		'class' => 'elgg-button elgg-button-delete elgg-state-disabled float-alt'
+		'class' => 'elgg-button elgg-button-delete float-alt',
+		'confirm' => elgg_echo('deleteconfirm')
 	));
 }
 
@@ -32,7 +34,7 @@ if (!$vars['guid'] || ($blog && $blog->status != 'published')) {
 	$preview_button = elgg_view('input/submit', array(
 		'value' => elgg_echo('preview'),
 		'name' => 'preview',
-		'class' => 'mls',
+		'class' => 'elgg-button-action mls',
 	));
 }
 
@@ -83,9 +85,9 @@ if (elgg_plugin_exists('blog_tools'))
 
 $body_label = elgg_echo('blog:body');
 $body_input = elgg_view('input/longtext', array(
-    'name' => 'description',
-    'id' => 'blog_description',
-    'value' => $vars['description']
+	'name' => 'description',
+	'id' => 'blog_description',
+	'value' => $vars['description']
 ));
 
 $save_status = elgg_echo('blog:save_status');
@@ -93,25 +95,26 @@ if ($vars['guid']) {
 	$entity = get_entity($vars['guid']);
 	$saved = date('F j, Y @ H:i', $entity->time_created);
 } else {
-	$saved = elgg_echo('blog:never');
+	$saved = elgg_echo('never');
 }
-// publication options
-$status = "<div class='mbs'>";
-$status .= "<label for='blog_status'>" . elgg_echo('blog:status') . "</label><br/>";
-$status .=  elgg_view('input/dropdown', array(
-    'name' => 'status',
-    'id' => 'blog_status',
-    'value' => $vars['status'],
-    'options_values' => array(
-        'draft' => elgg_echo('blog:status:draft'),
-        'published' => elgg_echo('blog:status:published')
-    )
-));
-$status .= "</div>";
 
 // advanced publication options
 if(elgg_is_active_plugin('blog_tools'))
 {
+    // publication options
+    $status = "<div class='mbs'>";
+    $status .= "<label for='blog_status'>" . elgg_echo('status') . "</label><br/>";
+    $status .=  elgg_view('input/dropdown', array(
+        'name' => 'status',
+        'id' => 'blog_status',
+        'value' => $vars['status'],
+        'options_values' => array(
+            'draft' => elgg_echo('status:draft'),
+            'published' => elgg_echo('status:published')
+        )
+    ));
+    $status .= "</div>";    
+    
     if(blog_tools_use_advanced_publication_options()){
         if(!empty($blog)){
             $publication_date_value = elgg_extract("publication_date", $vars, $blog->publication_date);
@@ -148,24 +151,68 @@ if(elgg_is_active_plugin('blog_tools'))
     } else {
         $publication_options = $status;
     }
+	
+		// show owner
+	$show_owner_setting = elgg_get_plugin_setting("show_full_owner", "blog_tools");
+
+	if (empty($show_owner_setting)) {
+		$show_owner_setting = "no";
+	}
+	
+	if (empty($blog)) {
+		$show_owner_value = elgg_extract("show_owner", $vars, $show_owner_setting);
+	} else 
+	{
+		if ($blog->show_owner == '')
+		{
+			if ($vars['show_owner'] == '')
+			{
+				$show_owner_value = elgg_extract("show_owner", $vars, $show_owner_setting);
+			}
+			else
+			{
+				$show_owner_value = $vars['show_owner'];
+			}
+		}
+		else 
+		{
+			$show_owner_value = $blog->show_owner;
+		}
+	}
+
+	if ($show_owner_setting == "optional") {
+		$show_owner_input = elgg_view('input/dropdown', array(
+			'name' => 'show_owner',
+			'id' => 'blog_show_owner',
+			'class' => 'mls',
+			'value' => $show_owner_value,
+			'options_values' => array('no' => elgg_echo('option:no'), 'yes' => elgg_echo('option:yes'))
+		));
+	} else {
+		$show_owner_input = elgg_view('input/hidden', array(
+			'name' => 'show_owner',
+			'id' => 'blog_show_owner',
+			'value' => $show_owner_value,
+		));
+	}
 }
 else
 {
-    $status_label = elgg_echo('blog:status');
-    $status_input = elgg_view('input/dropdown', array(
+    $status_label = elgg_echo('status');
+    $status_input = elgg_view('input/select', array(
     'name' => 'status',
     'id' => 'blog_status',
     'value' => $vars['status'],
     'options_values' => array(
-        'draft' => elgg_echo('blog:status:draft'),
-        'published' => elgg_echo('blog:status:published')
+        'draft' => elgg_echo('status:draft'),
+        'published' => elgg_echo('status:published')
     )
 ));
     
 }
 
 $comments_label = elgg_echo('comments');
-$comments_input = elgg_view('input/dropdown', array(
+$comments_input = elgg_view('input/select', array(
 	'name' => 'comments_on',
 	'id' => 'blog_comments_on',
 	'value' => $vars['comments_on'],
@@ -183,7 +230,10 @@ $access_label = elgg_echo('access');
 $access_input = elgg_view('input/access', array(
 	'name' => 'access_id',
 	'id' => 'blog_access_id',
-	'value' => $vars['access_id']
+	'value' => $vars['access_id'],
+	'entity' => $vars['entity'],
+	'entity_type' => 'object',
+	'entity_subtype' => 'blog',
 ));
 
 $categories_input = elgg_view('input/categories', $vars);
@@ -202,6 +252,7 @@ echo ($draft_warning .
 	<label for="blog_excerpt">' . $excerpt_label . '</label><br/>' .
 	$excerpt_input . 
 '</div>');
+
 if (elgg_is_active_plugin('blog_tools'))
 {
 echo '<div>
@@ -210,6 +261,7 @@ echo '<div>
     $icon_remove_input . 
 '</div>';
 }
+
 echo '<div>
 	<label for="blog_description">' . $body_label . '</label>' .
 	$body_input . 
@@ -218,22 +270,30 @@ echo '<div>
 '<div>
 	<label for="blog_tags">' . $tags_label . '</label><br/>' .
 	$tags_input .
-'</div>' .
-
-$categories_input .
-
+'</div>';
+echo '<div>
+	<label for="blog_access_id">' . $access_label . '</label><br/>' .
+	$access_input .
+'</div>' . 
 $container_input .
-
 '<div>
 	<label for="blog_comments_on">' . $comments_label . '</label><br/>' .
 	$comments_input .
-'</div>' .
-
-'<div>
-	<label for="blog_access_id">' . $access_label . '</label><br/>' .
-	$access_input .
 '</div>';
+if (elgg_is_active_plugin('blog_tools'))
+{
+	// show owner information
+	if ($show_owner_setting == "optional") {
+		echo "<div>";
+		echo "<label for='blog_show_owner'>" . elgg_echo('blog_tools:label:show_owner') . "</label>";
+		echo $show_owner_input;
+		echo "</div>";
+	} else {
+		echo $show_owner_input;
+	}
+}
 
+echo $categories_input;
 if (elgg_is_active_plugin('blog_tools'))
     echo $publication_options;
 else {

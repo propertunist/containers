@@ -5,7 +5,6 @@
  * @package Bookmarks
  */
 
-// once elgg_view stops throwing all sorts of junk into $vars, we can use extract()
 $title = elgg_extract('title', $vars, '');
 $desc = elgg_extract('description', $vars, '');
 $address = elgg_extract('address', $vars, '');
@@ -31,21 +30,29 @@ $shares = elgg_extract('shares', $vars, array());
 	<label><?php echo elgg_echo('tags'); ?></label>
 	<?php echo elgg_view('input/tags', array('name' => 'tags', 'value' => $tags)); ?>
 </div>
+
+<div>
+	<label><?php echo elgg_echo('access'); ?></label><br />
+	<?php echo elgg_view('input/access', array(
+		'name' => 'access_id',
+		'value' => $access_id,
+		'entity' => get_entity($guid),
+		'entity_type' => 'object',
+		'entity_subtype' => 'bookmarks',
+	)); ?>
+</div>
 <?php
+
+$containers =  elgg_view('input/containers', $vars);
+if ($containers){
+    echo $containers;
+}
 
 $categories = elgg_view('input/categories', $vars);
 if ($categories) {
 	echo $categories;
 }
-$containers =  elgg_view('input/containers', $vars);
-if ($containers){
-    echo $containers;
-}
 ?>
-<div>
-	<label><?php echo elgg_echo('access'); ?></label><br />
-	<?php echo elgg_view('input/access', array('name' => 'access_id', 'value' => $access_id)); ?>
-</div>
 <div class="elgg-foot">
 <?php
 

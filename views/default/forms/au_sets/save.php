@@ -8,15 +8,16 @@ $action_buttons = '';
 $delete_link = '';
 
 if ($vars['guid']
-		&& (($set->owner_guid == elgg_get_logged_in_user_guid())
-				|| elgg_is_admin_logged_in()
-				)) {
+	&& (($set->owner_guid == elgg_get_logged_in_user_guid())
+		|| elgg_is_admin_logged_in()
+			)) {
 	// add a delete button if editing AND we're the owner
 	$delete_url = "action/au_set/delete?guid={$vars['guid']}";
-	$delete_link = elgg_view('output/confirmlink', array(
+	$delete_link = elgg_view('output/url', array(
 		'href' => $delete_url,
 		'text' => elgg_echo('delete'),
-		'class' => 'elgg-button elgg-button-delete float-alt'
+		'class' => 'elgg-button elgg-button-delete float-alt',
+		'confirm' => elgg_echo('deleteconfirm')
 	));
 }
 
@@ -98,13 +99,13 @@ $layout_help = elgg_view('output/longtext', array(
 // autopin
 $pin_input = '';
 if ($pin) {
-  $pin_input = elgg_view('input/hidden', array('name' => 'pin', 'value' => $pin));
+	$pin_input = elgg_view('input/hidden', array('name' => 'pin', 'value' => $pin));
 }
 
 echo <<<___HTML
 
- <div>
-  <label for="au_set_icon">$icon_label</label>
+<div>
+	<label for="au_set_icon">$icon_label</label>
 	$icon_input
 </div>
 
@@ -122,27 +123,29 @@ echo <<<___HTML
 	<label for="au_set_tags">$tags_label</label>
 	$tags_input
 </div>
-
-$categories_input
-$container_input
-<div>
-	<label for="au_set_comments_on">$comments_label</label>
-	$comments_input
-</div>
-
+        
 <div>
 	<label for="au_set_access_id">$access_label</label>
 	$access_input
 </div>
 
 <div>
-  <label for="au_set_write_access_id">$write_access_label</label>
+	<label for="au_set_write_access_id">$write_access_label</label>
 	$write_access_input
 	$write_access_help
-</div>
+</div>   
+        
+$container_input
 
 <div>
-  <label for="au_set_layout">$layout_label</label>
+	<label for="au_set_comments_on">$comments_label</label>
+	$comments_input
+</div>
+
+$categories_input        
+        
+   <div>
+	<label for="au_set_layout">$layout_label</label>
 	$layout_help
 	$layout_input
 </div>
