@@ -26,21 +26,22 @@ $guid = elgg_extract('guid', $vars, 0);
 	<label><?php echo elgg_echo('tags'); ?></label>
 	<?php echo elgg_view('input/tags', array('name' => 'tags', 'value' => $tags)); ?>
 </div>
+<div>
+	<label><?php echo elgg_echo('access'); ?></label>
+	<?php echo elgg_view('input/access', array('name' => 'access_id', 'value' => $access_id)); ?>
+</div>
 <?php
+$containers = elgg_view('input/containers', $vars);
+if ($containers){
+    echo $containers;
+}
 
 $categories = elgg_view('input/categories', $vars);
 if ($categories) {
 	echo $categories;
 }
-$containers = elgg_view('input/containers', $vars);
-if ($containers){
-    echo $containers;
-}
+
 ?>
-<div>
-	<label><?php echo elgg_echo('access'); ?></label>
-	<?php echo elgg_view('input/access', array('name' => 'access_id', 'value' => $access_id)); ?>
-</div>
 <div class="elgg-foot">
 <?php
 echo elgg_view('input/hidden', array('name' => 'guid', 'value' => $guid));

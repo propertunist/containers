@@ -1,7 +1,7 @@
 <?php
 /**
  * Discussion topic add/edit form body
- * 
+ *
  */
 
 $title = elgg_extract('title', $vars, '');
@@ -15,32 +15,40 @@ $guid = elgg_extract('guid', $vars, null);
 ?>
 <div>
 	<label><?php echo elgg_echo('title'); ?></label><br />
-	<?php echo elgg_view('input/text', array('name' => 'title', 'value' => $title)); ?>
+	<?php echo elgg_view('input/text', array('name' => 'title', 'value' => $title, 'required' => true)); ?>
 </div>
 <div>
-	<label><?php echo elgg_echo('groups:topicmessage'); ?></label>
-	<?php echo elgg_view('input/longtext', array('name' => 'description', 'value' => $desc)); ?>
+	<label><?php echo elgg_echo('discussion:topic:description'); ?></label>
+	<?php echo elgg_view('input/longtext', array('name' => 'description', 'value' => $desc, 'required' => true,)); ?>
 </div>
 <div>
 	<label><?php echo elgg_echo('tags'); ?></label>
 	<?php echo elgg_view('input/tags', array('name' => 'tags', 'value' => $tags)); ?>
 </div>
 <div>
-    <label><?php echo elgg_echo("groups:topicstatus"); ?></label><br />
+    <label><?php echo elgg_echo("discussion:topic:status"); ?></label><br />
 	<?php
-		echo elgg_view('input/dropdown', array(
+		echo elgg_view('input/select', array(
 			'name' => 'status',
 			'value' => $status,
 			'options_values' => array(
-				'open' => elgg_echo('groups:topicopen'),
-				'closed' => elgg_echo('groups:topicclosed'),
+				'open' => elgg_echo('status:open'),
+				'closed' => elgg_echo('status:closed'),
 			),
+			'label' => elgg_echo('discussion:topic:status'),
 		));
 	?>
 </div>
 <div>
 	<label><?php echo elgg_echo('access'); ?></label><br />
-	<?php echo elgg_view('input/access', array('name' => 'access_id', 'value' => $access_id)); ?>
+	<?php echo elgg_view('input/access', array(
+		'name' => 'access_id',
+		'value' => $access_id,
+		'entity' => get_entity($guid),
+		'entity_type' => 'object',
+		'entity_subtype' => 'discussion',
+		'label' => elgg_echo('access')
+	)); ?>
 </div>
 <div>
 	<?php

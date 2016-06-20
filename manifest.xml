@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin_manifest xmlns="http://www.elgg.org/plugin_manifest/1.8">
 	<name>Containers</name>
+        <id>containers</id>
 	<author>ura soul</author>
-	<version>0.5</version>
+	<version>2.0</version>
 	<category>enhancement</category>
 	<blurb>Add selector to assign items to a container/group</blurb>
 	<description>allows entities to be assigned to groups/containers - such that they can be moved from one group to another. also adds a label to entity description outputs to show which group the entity is contained by.</description>
-	<website>http://www.infiniteeureka.com/</website>
+	<website>http://www.ureka.org/</website>
 	<license>GNU General Public License version 2</license>
 	<requires>
 		<type>elgg_release</type>
-		<version>1.8</version>
+		<version>2.0</version>
 	</requires>
 	  <requires>
     <type>plugin</type>
@@ -66,4 +67,14 @@
     <priority>after</priority>
     <plugin>videolist</plugin>
   </requires>
+  <suggests>
+    <type>plugin</type>
+    <name>blog_tools</name>
+    <version>>=2.5</version>
+  </suggests>
+  <suggests>
+    <type>plugin</type>
+    <name>pages_tools</name>
+    <version>>=1</version>
+  </suggests>
 </plugin_manifest>
