@@ -18,7 +18,7 @@ https://www.ureka.org/donation
 
 changelog
 ---------
-
+2.0.1 - fixed: full list of containers was not available when adding an item inside a group
 2.0 - fixed: label for container of a new item was not identifying if current page owner was a group
 changed: compatibility check for 2.0.
 

@@ -17,14 +17,14 @@ elgg_require_js("containers/container_access");
 if (isset($vars['entity']) && $vars['entity'] instanceof ElggEntity) {
     $in_container = $vars['entity']->getContainerEntity();
     $entity_owner = $vars['entity']->getOwnerEntity();
-
 }
 else {
+    // set defaults if entity is a new one
     $in_container = $page_owner;
-    $entity_owner = $page_owner;
+    $entity_owner = $logged_in_user;
 }
 
- $content = elgg_get_entities_from_relationship(array(
+ $groups = elgg_get_entities_from_relationship(array(
         'type' => 'group',
         'relationship' => 'member',
         'relationship_guid' => $entity_owner->guid,
@@ -32,8 +32,8 @@ else {
         'limit' => 0,
     ));
 
-    if (empty($content)) {
-        $content = array();
+    if (empty($groups)) {
+        $groups = array();
     }
     if ($entity_owner instanceof ElggUser)
     {
@@ -48,7 +48,7 @@ else {
         $containers[$logged_in_user->guid] = elgg_echo('profile') . ': ' . $logged_in_user->name;
     }
 
-     foreach ($content as $container) {
+     foreach ($groups as $container) {
         $containers[$container->guid ] =   elgg_echo('group') . ': ' . $container->name;
     }
 
